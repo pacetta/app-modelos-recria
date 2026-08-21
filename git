@@ -28,6 +28,7 @@ git push
 ######### en power shell
 Remove-Item "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria\.git\index.lock" 
 -Force
+Remove-Item "H:/Mi unidad/Analisis Mercado Ganadero/app modelos recria/.git/index.lock" -Force
 
 cd "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria"
 git add -A

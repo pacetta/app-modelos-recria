@@ -155,12 +155,10 @@ ui <- page_fillable(
   title = "Análisis de Decisión — Recría + Engorde",
   theme = bs_theme(version = 5, primary = sf_brand, secondary = sf_verde_medio),
 
-  # Encabezado con logo
-  div(style = "padding:1rem; background-color:white; border-bottom:1px solid #eee; display:flex; align-items:center; gap:1rem;",
-    img(src = "https://smart-farming.com.ar/wp-content/uploads/2024/01/logo-smart-farming.png",
-        height = "40px",
-        style = "max-height:40px;"),
-    h3("Análisis de Decisión — Recría + Engorde", style = "margin:0; color:#1a1a1a; font-size:1.3em;")
+  # Encabezado
+  div(style = "padding:1.5rem; background:linear-gradient(135deg, #1a6e3c 0%, #2F5233 100%); color:white;",
+    p("Smart Farming", style = "margin:0; font-size:0.9em; opacity:0.9; font-weight:500;"),
+    h2("Análisis de Decisión — Recría + Engorde", style = "margin:0.5rem 0 0 0; font-size:1.4em; font-weight:600;")
   ),
 
   layout_sidebar(
@@ -173,7 +171,7 @@ ui <- page_fillable(
     # Sección: Situación Actual
     div(style = "background: white; padding:1rem; border-radius:4px; margin-bottom:1.5rem; border-left:4px solid #ff6b6b;",
       h6("SITUACIÓN ACTUAL", style = paste0("color:", sf_verde_oscuro, "; margin-top:0;")),
-      selectInput("camino_elegido", "¿Cuál camino eligió?",
+      selectInput("camino_elegido", "¿Cuál opción eligió?",
                   choices = setNames(1:5, c("1. Venta oct.", "2. Capitalización", "3. Corral", "4. Pastura", "5. Recría+corral")),
                   selected = 1),
       dateInput("fecha_hoy", "Fecha de hoy", value = Sys.Date(), format = "dd/mm/yyyy"),
@@ -218,7 +216,7 @@ ui <- page_fillable(
     ),
 
     div(
-      h6("Costos por camino", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
+      h6("Costos por opción", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
       numericInput("costo_alim_3", "C3 Costo $/kg", value = 2000, step = 100),
       numericInput("estructura_3", "C3 Gastos $/cab", value = 25000, step = 1000),
       numericInput("costo_alim_4", "C4 Costo $/kg", value = 1000, step = 100),
@@ -284,6 +282,17 @@ server <- function(input, output, session) {
 
     tagList(
       card(
+        card_body(
+          style = "padding:1.5rem; background-color:#f0f7ff; border-left:4px solid #1a6e3c;",
+          h5("Cómo usar esta herramienta", style = "margin-top:0; color:#1a6e3c;"),
+          p("1. Completa los parámetros de la izquierda (precios, tasas, costos)", style = "margin:0.5rem 0; font-size:0.9em;"),
+          p("2. Selecciona cuál opción elegiste al inicio", style = "margin:0.5rem 0; font-size:0.9em;"),
+          p("3. Indica tu margen acumulado hasta hoy", style = "margin:0.5rem 0; font-size:0.9em;"),
+          p("4. Mira abajo: si sigues en esa opción vs. si cambias a otra", style = "margin:0.5rem 0; font-size:0.9em;")
+        )
+      ),
+
+      card(
         card_header("¿DÓNDE ESTAMOS?", style = paste0("background-color:", sf_verde_oscuro, "; color:white; font-weight:bold;")),
         card_body(
           h5(paste0("Opción ", camino_actual, ": ", fila_actual$nombre)),
@@ -303,7 +312,7 @@ server <- function(input, output, session) {
       card(
         card_header("¿QUÉ CONVIENE?", style = paste0("background-color:", sf_verde_medio, "; color:white; font-weight:bold;")),
         card_body(
-          p("Si sigue en este camino vs. si cambia:", style = "color:#666; font-size:0.9em; margin-bottom:1.5rem;"),
+          p("Si sigue en esta opción vs. si cambia:", style = "color:#666; font-size:0.9em; margin-bottom:1.5rem;"),
           tableOutput("tabla_decision")
         )
       )
@@ -348,7 +357,7 @@ server <- function(input, output, session) {
   output$tab_comparativa <- renderUI({
     tagList(
       card(
-        card_header("Resultado vs. plazo fijo — los 5 caminos",
+        card_header("Resultado vs. plazo fijo — las 5 opciones",
                      style = paste0("background-color:", sf_verde_oscuro, "; color:white;")),
         card_body(
           style = "padding:2rem;",
