@@ -29,5 +29,5 @@ git push
 Remove-Item "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria\.git\index.lock" -Force
 cd "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria"
 git add -A
-git commit -m "Redesign UI with tabs per model and left sidebar parameters"
+git commit -m "Fix slider labels and table formatting"
 git push
