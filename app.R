@@ -6,6 +6,7 @@
 # =============================================================================
 
 library(shiny)
+library(bslib)
 library(ggplot2)
 library(scales)
 
@@ -150,20 +151,28 @@ calcular_modelo <- function(params, costos_camino) {
 # =============================================================================
 # UI
 # =============================================================================
-ui <- page_sidebar(
+ui <- page_fillable(
   title = "Análisis de Decisión — Recría + Engorde",
   theme = bs_theme(version = 5, primary = sf_brand, secondary = sf_verde_medio),
-  fillable = TRUE,
 
-  sidebar = sidebar(
-    width = 280,
-    style = paste0("background-color:", sf_verde_palido, "; padding:1rem;"),
+  # Encabezado con logo
+  div(style = "padding:1rem; background-color:white; border-bottom:1px solid #eee; display:flex; align-items:center; gap:1rem;",
+    img(src = "https://smart-farming.com.ar/wp-content/uploads/2024/01/logo-smart-farming.png",
+        height = "40px",
+        style = "max-height:40px;"),
+    h3("Análisis de Decisión — Recría + Engorde", style = "margin:0; color:#1a1a1a; font-size:1.3em;")
+  ),
 
-    h5("📊 PARÁMETROS", style = paste0("color:", sf_verde_oscuro, ";")),
+  layout_sidebar(
+    sidebar = sidebar(
+      width = 280,
+      style = paste0("background-color:", sf_verde_palido, "; padding:1rem;"),
+
+    h5("PARÁMETROS", style = paste0("color:", sf_verde_oscuro, ";")),
 
     # Sección: Situación Actual
     div(style = "background: white; padding:1rem; border-radius:4px; margin-bottom:1.5rem; border-left:4px solid #ff6b6b;",
-      h6("📍 SITUACIÓN ACTUAL", style = paste0("color:", sf_verde_oscuro, "; margin-top:0;")),
+      h6("SITUACIÓN ACTUAL", style = paste0("color:", sf_verde_oscuro, "; margin-top:0;")),
       selectInput("camino_elegido", "¿Cuál camino eligió?",
                   choices = setNames(1:5, c("1. Venta oct.", "2. Capitalización", "3. Corral", "4. Pastura", "5. Recría+corral")),
                   selected = 1),
@@ -173,7 +182,7 @@ ui <- page_sidebar(
 
     # Sección: Parámetros generales
     div(
-      h6("1️⃣ Macro y financiero", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
+      h6("1. Macro y financiero", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
       sliderInput("inflacion_mensual", "Inflación %/mes", min = 0, max = 8, value = 1.75, step = 0.1, post = "%"),
       sliderInput("tasa_pf_tna", "Tasa PF (TNA)", min = 0, max = 100, value = 19, step = 1, post = "%"),
       sliderInput("tasa_costo_financiero", "Tasa costo financiero", min = 0, max = 100, value = 25, step = 1, post = "%"),
@@ -181,13 +190,13 @@ ui <- page_sidebar(
     ),
 
     div(
-      h6("2️⃣ Dólar", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
+      h6("2. Dólar", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
       numericInput("dolar_hoy", "Dólar hoy", value = 1515, step = 1),
       style = "font-size:0.85em; margin-bottom:1rem;"
     ),
 
     div(
-      h6("3️⃣ Precios hacienda", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
+      h6("3. Precios hacienda", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
       numericInput("ternero_precio_abril", "Ternero 180kg", value = 6600, step = 100),
       numericInput("novillito_270", "Novillito 270kg", value = 6200, step = 100),
       numericInput("novillo_gordo", "Novillo 415-440kg", value = 4600, step = 100),
@@ -196,14 +205,14 @@ ui <- page_sidebar(
     ),
 
     div(
-      h6("4️⃣ Gastos", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
+      h6("4. Gastos", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
       sliderInput("pct_gastos_compra", "% Gastos compra", min = 0, max = 15, value = 5, step = 0.5, post = "%"),
       sliderInput("pct_gastos_venta", "% Gastos venta", min = 0, max = 15, value = 7, step = 0.5, post = "%"),
       style = "font-size:0.85em; margin-bottom:1rem;"
     ),
 
     div(
-      h6("5️⃣ Capitalización", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
+      h6("5. Capitalización", style = paste0("color:", sf_verde_oscuro, "; margin-bottom:0.5rem; font-size:0.9rem;")),
       sliderInput("pct_dueno_capitalizacion", "% dueño", min = 0, max = 100, value = 45, step = 1, post = "%"),
       style = "font-size:0.85em; margin-bottom:1rem;"
     ),
@@ -218,16 +227,17 @@ ui <- page_sidebar(
       numericInput("estructura_5", "C5 Gastos $/cab", value = 20000, step = 1000),
       style = "font-size:0.85em;"
     )
-  ),
+    ),
 
-  navset_tab(
-    nav_panel("📊 Análisis", uiOutput("tab_analisis")),
+    navset_tab(
+    nav_panel("Análisis", uiOutput("tab_analisis")),
     nav_panel("1. Venta oct.", uiOutput("tab_camino_1")),
     nav_panel("2. Capitalización", uiOutput("tab_camino_2")),
     nav_panel("3. Corral liviano", uiOutput("tab_camino_3")),
     nav_panel("4. Pastura", uiOutput("tab_camino_4")),
     nav_panel("5. Recría+corral", uiOutput("tab_camino_5")),
-    nav_panel("📈 Comparativa", uiOutput("tab_comparativa"))
+    nav_panel("Comparativa", uiOutput("tab_comparativa"))
+    )
   )
 )
 
@@ -276,7 +286,7 @@ server <- function(input, output, session) {
       card(
         card_header("¿DÓNDE ESTAMOS?", style = paste0("background-color:", sf_verde_oscuro, "; color:white; font-weight:bold;")),
         card_body(
-          h5(paste0("Camino ", camino_actual, ": ", fila_actual$nombre)),
+          h5(paste0("Opción ", camino_actual, ": ", fila_actual$nombre)),
           p(fila_actual$descripcion, style = "color:#666; font-size:0.9em;"),
           hr(),
           fluidRow(
@@ -387,7 +397,7 @@ server <- function(input, output, session) {
     margen_final_si_sigue <- fila_actual$margen_post_cf + margen_acum
 
     data.frame(
-      Camino = paste0(df$id, ". ", df$nombre),
+      Opción = paste0(df$id, ". ", df$nombre),
       Margen_final = scales::comma(round(df$margen_post_cf + ifelse(df$id == camino_actual, margen_acum, 0)), big.mark = "."),
       Diferencia = scales::comma(round((df$margen_post_cf + ifelse(df$id == camino_actual, margen_acum, 0)) - margen_final_si_sigue), big.mark = "."),
       check.names = FALSE
@@ -397,7 +407,7 @@ server <- function(input, output, session) {
   output$tabla_resumen <- renderTable({
     df <- resultado()
     data.frame(
-      Camino = df$nombre,
+      Opción = df$nombre,
       Salida = format(df$fecha_salida, "%d/%m"),
       Kg = df$peso_venta,
       Margen_bruto = scales::comma(round(df$margen_bruto), big.mark = "."),

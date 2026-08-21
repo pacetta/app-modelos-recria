@@ -23,7 +23,9 @@ shinylive::export(
 
 # luego ir al archivo git en terminal
 
-
+### probar antes de git
+#install.packages("httpuv")
+httpuv::runStaticServer("H:/Mi unidad/Analisis Mercado Ganadero/app modelos recria/docs")
 
 # voy por otra opcion con shinyapp
 
