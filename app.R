@@ -294,17 +294,7 @@ server <- function(input, output, session) {
         card_header("¿QUÉ CONVIENE?", style = paste0("background-color:", sf_verde_medio, "; color:white; font-weight:bold;")),
         card_body(
           p("Si sigue en este camino vs. si cambia:", style = "color:#666; font-size:0.9em; margin-bottom:1.5rem;"),
-          div(style = "overflow-x:auto;",
-            htmlTable::htmlTable(
-              data.frame(
-                Camino = paste0(df$id, ". ", df$nombre),
-                "Margen final" = scales::comma(round(df$margen_post_cf + ifelse(df$id == camino_actual, margen_acum, 0)), big.mark = "."),
-                "Diferencia vs actual" = scales::comma(round((df$margen_post_cf + ifelse(df$id == camino_actual, margen_acum, 0)) - margen_final_si_sigue), big.mark = "."),
-                check.names = FALSE
-              ),
-              rnames = FALSE
-            )
-          )
+          tableOutput("tabla_decision")
         )
       )
     )
@@ -388,6 +378,21 @@ server <- function(input, output, session) {
         plot.margin = margin(10, 60, 10, 10)
       )
   })
+
+  output$tabla_decision <- renderTable({
+    df <- resultado()
+    camino_actual <- as.numeric(input$camino_elegido)
+    margen_acum <- input$margen_acumulado
+    fila_actual <- df[df$id == camino_actual, ]
+    margen_final_si_sigue <- fila_actual$margen_post_cf + margen_acum
+
+    data.frame(
+      Camino = paste0(df$id, ". ", df$nombre),
+      Margen_final = scales::comma(round(df$margen_post_cf + ifelse(df$id == camino_actual, margen_acum, 0)), big.mark = "."),
+      Diferencia = scales::comma(round((df$margen_post_cf + ifelse(df$id == camino_actual, margen_acum, 0)) - margen_final_si_sigue), big.mark = "."),
+      check.names = FALSE
+    )
+  }, striped = TRUE, hover = TRUE, spacing = "m", width = "100%")
 
   output$tabla_resumen <- renderTable({
     df <- resultado()

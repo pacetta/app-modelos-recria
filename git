@@ -20,14 +20,16 @@ git push -u origin main
 # si hay que volver a cargar: (cambiar el commit!!!)
 
 cd "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria"
-git add docs/
+git add -A
 git commit -m "Fix 3 nueva app"
 git push
 
 
-#########
-Remove-Item "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria\.git\index.lock" -Force
+######### en power shell
+Remove-Item "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria\.git\index.lock" 
+-Force
+
 cd "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria"
 git add -A
-git commit -m "Fix slider labels and table formatting"
+git commit -m "Fix htmlTable error - use renderTable instead"
 git push
