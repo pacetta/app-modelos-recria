@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(R --version)",
+      "Bash(R --version)"
+    ]
+  }
+}

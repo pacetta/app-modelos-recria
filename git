@@ -1,0 +1,33 @@
+# primero archivo instalacion!
+
+cd "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria"
+
+git init
+
+git add docs/
+
+git commit -m "Deploy Shinylive app"
+
+git branch -M main
+
+git remote add origin https://github.com/pacetta/app-modelos-recria.git
+
+git remote set-url origin https://github.com/pacetta/app-modelos-recria.git
+
+git push -u origin main
+
+
+# si hay que volver a cargar: (cambiar el commit!!!)
+
+cd "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria"
+git add docs/
+git commit -m "Fix 3 nueva app"
+git push
+
+
+#########
+Remove-Item "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria\.git\index.lock" -Force
+cd "H:\Mi unidad\Analisis Mercado Ganadero\app modelos recria"
+git add -A
+git commit -m "Redesign UI with tabs per model and left sidebar parameters"
+git push
