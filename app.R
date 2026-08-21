@@ -361,7 +361,7 @@ server <- function(input, output, session) {
                      style = paste0("background-color:", sf_verde_oscuro, "; color:white;")),
         card_body(
           style = "padding:2rem;",
-          plotOutput("grafico_resultado", height = "400px")
+          plotOutput("grafico_resultado", height = "600px")
         )
       ),
 
@@ -381,22 +381,24 @@ server <- function(input, output, session) {
     df$color_barra <- ifelse(df$resultado_vs_pf >= 0, sf_verde_medio, "#B5533C")
 
     ggplot(df, aes(x = reorder(nombre, resultado_vs_pf), y = resultado_vs_pf, fill = color_barra)) +
-      geom_col(width = 0.6) +
-      geom_hline(yintercept = 0, linewidth = 0.4, color = "#444") +
+      geom_col(width = 0.7) +
+      geom_hline(yintercept = 0, linewidth = 0.5, color = "#444") +
       geom_text(aes(label = scales::comma(round(resultado_vs_pf), big.mark = ".")),
-                hjust = ifelse(df$resultado_vs_pf >= 0, -0.15, 1.15),
-                size = 3.6, color = "#222") +
+                hjust = ifelse(df$resultado_vs_pf >= 0, -0.2, 1.2),
+                size = 4.5, color = "#222", fontface = "bold") +
       coord_flip(clip = "off") +
       scale_fill_identity() +
       scale_y_continuous(labels = function(x) scales::comma(x, big.mark = ".")) +
-      labs(x = NULL, y = "Resultado vs. plazo fijo ($/cab)") +
-      theme_minimal(base_size = 13) +
+      labs(x = NULL, y = "Resultado vs. plazo fijo ($/cab)", title = NULL) +
+      theme_minimal(base_size = 14) +
       theme(
         panel.grid.minor = element_blank(),
         panel.grid.major.y = element_blank(),
-        plot.margin = margin(10, 60, 10, 10)
+        plot.margin = margin(20, 80, 20, 20),
+        axis.text = element_text(size = 13),
+        axis.title = element_text(size = 13, face = "bold")
       )
-  })
+  }, res = 96)
 
   output$tabla_decision <- renderTable({
     df <- resultado()
